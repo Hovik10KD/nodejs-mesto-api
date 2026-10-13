@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "npx eslint src/**/*.ts",
     "start": "node dist/app.js",
-    "dev": "ts-node-dev --respawn src/app.ts",
+    "dev": "ts-node-dev --respawn --files src/app.ts",
     "build": "tsc"
   },
   "keywords": [
