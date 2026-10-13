@@ -3,10 +3,11 @@
 // т.к. у нас обе команды "start"/"dev" запускали не скомполированный код.
 
 import express from 'express';
-// import type { Request, Response } from 'express';
+import mongoose from 'mongoose';
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, MONGODB_URI = 'mongodb://localhost:27017/mestodb' } = process.env;
 
 const app = express();
 
-app.listen(PORT, () => {});
+mongoose.connect(MONGODB_URI);
+app.listen(PORT);
