@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import Users from 'models/users';
+import Users from '../models/users';
 
 const getUsers = (_req: Request, res: Response) => {
   Users.find({}).then((users) => res.send({ data: users }));

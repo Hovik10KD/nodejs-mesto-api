@@ -2,7 +2,7 @@
 
 import { Request, Response, NextFunction } from 'express';
 
-import type { IError } from 'types/error';
+import type { IError } from '../types/error';
 
 const errorHandler = (
   err: IError,
