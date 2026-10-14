@@ -27,4 +27,36 @@ const deleteCard = (req: Request, res: Response) => {
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
-export default { getCards, createCard, deleteCard };
+const likeCard = (req: Request, res: Response) => {
+  const { cardId } = req.params;
+  const authUserId = req.user?._id;
+
+  Cards.findByIdAndUpdate(
+    cardId,
+    { $addToSet: { likes: authUserId } },
+    { new: true },
+  )
+    .then((card) => res.send({ data: card }))
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+};
+
+const unlikeCard = (req: Request, res: Response) => {
+  const { cardId } = req.params;
+  const authUserId = req.user?._id;
+
+  Cards.findByIdAndUpdate(
+    cardId,
+    { $pull: { likes: authUserId } },
+    { new: true },
+  )
+    .then((card) => res.send({ data: card }))
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+};
+
+export default {
+  getCards,
+  createCard,
+  deleteCard,
+  likeCard,
+  unlikeCard,
+};
