@@ -2,6 +2,7 @@
 
 import { Request, Response, NextFunction } from 'express';
 
+import ERROR_CODES from '../constants/errors';
 import type { IError } from '../types/error';
 
 const errorHandler = (
@@ -10,10 +11,13 @@ const errorHandler = (
   res: Response,
   _next: NextFunction,
 ) => {
-  const { statusCode = 500, message = '' } = err;
+  const { statusCode = ERROR_CODES.INTERNAL_SERVER_ERROR, message = '' } = err;
 
   res.status(statusCode).send({
-    message: statusCode === 500 ? 'Internal Server Error' : message,
+    message:
+      statusCode === ERROR_CODES.INTERNAL_SERVER_ERROR
+        ? 'Internal Server Error'
+        : message,
   });
 };
 
