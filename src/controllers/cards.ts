@@ -1,12 +1,15 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 import Cards from '../models/cards';
+import NotFoundError from '../errors/not-found-error';
 
-const getCards = (_req: Request, res: Response) => {
-  Cards.find({}).then((cards) => res.send({ data: cards }));
+const getCards = (_req: Request, res: Response, next: NextFunction) => {
+  Cards.find({})
+    .then((cards) => res.send({ data: cards }))
+    .catch(next);
 };
 
-const createCard = (req: Request, res: Response) => {
+const createCard = (req: Request, res: Response, next: NextFunction) => {
   const { link, name } = req.body;
   const owner = req.user?._id;
 
@@ -15,19 +18,27 @@ const createCard = (req: Request, res: Response) => {
     link,
     owner,
   })
-    .then((card) => res.send(card))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .then((card) => {
+      res.send(card);
+    })
+    .catch(next);
 };
 
-const deleteCard = (req: Request, res: Response) => {
+const deleteCard = (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
   Cards.findByIdAndDelete(id)
-    .then((card) => res.send({ data: card }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError('Card not found');
+      }
+
+      res.send(card);
+    })
+    .catch(next);
 };
 
-const likeCard = (req: Request, res: Response) => {
+const likeCard = (req: Request, res: Response, next: NextFunction) => {
   const { cardId } = req.params;
   const authUserId = req.user?._id;
 
@@ -36,11 +47,17 @@ const likeCard = (req: Request, res: Response) => {
     { $addToSet: { likes: authUserId } },
     { new: true },
   )
-    .then((card) => res.send({ data: card }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError('Card not found');
+      }
+
+      res.send(card);
+    })
+    .catch(next);
 };
 
-const unlikeCard = (req: Request, res: Response) => {
+const unlikeCard = (req: Request, res: Response, next: NextFunction) => {
   const { cardId } = req.params;
   const authUserId = req.user?._id;
 
@@ -49,8 +66,14 @@ const unlikeCard = (req: Request, res: Response) => {
     { $pull: { likes: authUserId } },
     { new: true },
   )
-    .then((card) => res.send({ data: card }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError('Card not found');
+      }
+
+      res.send(card);
+    })
+    .catch(next);
 };
 
 export default {
