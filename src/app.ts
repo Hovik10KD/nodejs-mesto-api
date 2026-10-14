@@ -4,6 +4,7 @@
 
 import express from 'express';
 import mongoose from 'mongoose';
+import { errors } from 'celebrate';
 
 import errorHandler from './middlewares/error-handler';
 import mockAuthUser from './middlewares/mock-auth-user';
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 
+app.use(errors());
 app.use(errorHandler);
 
 mongoose.connect(MONGODB_URI);

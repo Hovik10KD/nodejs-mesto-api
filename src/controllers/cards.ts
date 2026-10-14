@@ -25,9 +25,9 @@ const createCard = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const deleteCard = (req: Request, res: Response, next: NextFunction) => {
-  const { id } = req.params;
+  const { cardId } = req.params;
 
-  Cards.findByIdAndDelete(id)
+  Cards.findByIdAndDelete(cardId)
     .then((card) => {
       if (!card) {
         throw new NotFoundError('Card not found');
