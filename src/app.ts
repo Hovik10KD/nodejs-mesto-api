@@ -9,6 +9,7 @@ import errorHandler from './middlewares/error-handler';
 import mockAuthUser from './middlewares/mock-auth-user';
 
 import usersRouter from './routes/users';
+import cardsRouter from './routes/cards';
 
 const { PORT = 3000, MONGODB_URI = 'mongodb://localhost:27017/mestodb' } = process.env;
 
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use('/users', usersRouter);
+app.use('/cards', cardsRouter);
 
 app.use(errorHandler);
 
